@@ -1,0 +1,104 @@
+<!doctype html>
+<html manifest='style_custom.appcache'>
+<head>
+<title>style custom</title>
+<script src='multi_replace.js'></script>
+<script src='draw_element_in_canvas.js'></script>
+<style>
+body {
+	background: white;
+}
+canvas {
+	//background: red;
+	border: 1px dotted;
+}
+#result {
+	float: left;
+}
+#memo {
+	width: 300px;
+	height: 200px;
+	background: silver;
+}
+#rules {
+	width: 400px;
+	height: 200px;
+	background: silver;
+}
+#plain {
+	width: 200px;
+	height: 200px;
+	background: silver;
+}
+</style>
+</head>
+<body>
+<textarea id='memo'>
+xxx> yyy> < bbb ccc <
+asfd>
+  hello:aaa:test>55<
+  aaa:options>12 23 something<
+<
+</textarea>
+<textarea id='rules'>
+[
+  ["\\n","<br />"],
+  [" "," "],
+  ["(\\S+)>","<span style='color:blue;'>$1</span><span style='color:red;'>&gt;</span>"],
+  ["<","<span style='color:red;'>&lt;</span>"],
+  [":","<span style='color:red;'><b>:</b></span>"],
+  ["(\\d+)","<span style='color:green;'>$1</span>"]
+]
+</textarea>
+<textarea id='plain'>
+
+</textarea>
+<div>
+<div id='result'></div>
+<canvas></canvas>
+</div>
+<script>
+  var memo = document.querySelector('textarea#memo')
+  var memo_rules = document.querySelector('textarea#rules')
+  var plain = document.querySelector('textarea#plain')
+  var result = document.querySelector('#result')
+  var btn_update_rules = document.querySelector('button#update')
+  var cnv = document.querySelector('canvas')
+  
+  var rules = {}
+  var text = ''
+ 
+  function update_result(){
+	result.innerHTML = plain.value
+	draw_element_in_canvas(result, cnv)
+	  //.then(alert)
+  }
+  
+  function update_plain(){
+	var styled_text = multi_replace(text, rules)
+	plain.value = styled_text
+  }
+  
+  function update_text(){
+	text = memo.value
+  }
+  function update_rules(){
+  	var str_rules = memo_rules.value
+	console.log(str_rules)
+	rules = JSON.parse(str_rules)
+	
+	console.log(rules)
+  }
+  
+  update_text()
+  update_rules()
+  update_plain()
+  update_result()
+  
+  memo.onchange = function(){update_text();update_plain();update_result();}
+  memo_rules.onchange = function(){update_rules();update_plain();update_result();}
+  plain.onchange = function(){update_result();}
+  
+</script>
+</body>
+</html>
