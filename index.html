@@ -2,7 +2,14 @@
 <html manifest='style_custom.appcache'>
 <head>
 <title>style custom</title>
-<script src='multi_replace.js'></script>
+<script>
+	function replace_pair(str, pair){
+		var src=pair[0]
+		var dst= pair[1]
+		var re=new RegExp(src, 'g')
+		return str.replace(re, dst)
+	}
+</script>
 <script src='draw_element_in_canvas.js'></script>
 <style>
 body {
@@ -42,12 +49,12 @@ asfd>
 </textarea>
 <textarea id='rules'>
 [
-  ["\\n","<br />"],
-  [" "," "],
-  ["(\\S+)>","<span style='color:blue;'>$1</span><span style='color:red;'>&gt;</span>"],
-  ["<","<span style='color:red;'>&lt;</span>"],
-  [":","<span style='color:red;'><b>:</b></span>"],
-  ["(\\d+)","<span style='color:green;'>$1</span>"]
+  ["( |\\n|\\S+>|<|:)","\t$1\t"],
+  ["\t(\\S+)>\t", "<span style='color:blue;'>$1</span><span style='color:red;'><big><b>></b></big></span>"],
+  ["\t<\t","<span style='color:red;'><big><b><</b></big></span>"],
+  ["\t:\t","<span style='color:dark;'><big><b>:</b></big></span>"],
+  ["\t \t"," "],
+  ["\t\\n\t","<br>"]
 ]
 </textarea>
 <textarea id='plain'>
@@ -75,7 +82,8 @@ asfd>
   }
   
   function update_plain(){
-	var styled_text = multi_replace(text, rules)
+	var styled_text = rules.reduce(replace_pair, text)
+	//var styled_text = multi_replace(text, rules)
 	plain.value = styled_text
   }
   
