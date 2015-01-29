@@ -22,4 +22,5 @@ function draw_element_in_canvas(element, canvas){
 		img.src = data;
 		img.onload = function() { ctx.drawImage(img, 0, 0); resolve(canvas);}
 	});
+
 }
