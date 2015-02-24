@@ -9,33 +9,58 @@
 		var re=new RegExp(src, 'g')
 		return str.replace(re, dst)
 	}
+  
+  function plain_replace_pair(str, pair){
+    return str.split(pair[0]).join(pair[1])
+  }
 </script>
 <script src='draw_element_in_canvas.js'></script>
 <style>
 body {
 	background: white;
+  margin: 0;
+}
+
+textarea, div {
+  padding: 0;
+  margin: 0;
+  border: 0;
 }
 canvas {
 	//background: red;
 	border: 1px dotted;
+  float: left;
 }
 #result {
 	float: left;
 }
 #memo {
 	width: 300px;
-	height: 200px;
+	height: 400px;
 	background: silver;
+  float: left;
+}
+#expressions {
+	width: 310px;
+	height: 100px;
+	background: silver;
+  display: block;
 }
 #rules {
-	width: 400px;
-	height: 200px;
-	background: silver;
+	width: 310px;
+	height: 300px;
+	background: LightGray;
+  display: block;
 }
 #plain {
 	width: 200px;
-	height: 200px;
+	height: 400px;
 	background: silver;
+  float: left;
+}
+
+#div_rules {
+  float: left;
 }
 </style>
 </head>
@@ -47,16 +72,17 @@ asfd>
   aaa:options>12 23 something<
 <
 </textarea>
+<div id='div_rules'>
+<textarea id='expressions'></textarea>
 <textarea id='rules'>
-[
-  ["( |\\n|\\S+>|<|:)","\t$1\t"],
-  ["\t(\\S+)>\t", "<span style='color:blue;'>$1</span><span style='color:red;'><big><b>></b></big></span>"],
-  ["\t<\t","<span style='color:red;'><big><b><</b></big></span>"],
-  ["\t:\t","<span style='color:dark;'><big><b>:</b></big></span>"],
-  ["\t \t"," "],
-  ["\t\\n\t","<br>"]
-]
+["( |\\n|\\S+>|<|:)","\t$1\t"],
+["\t(\\S+)>\t", "<span style='color:blue;'>$1</span><span style='color:red;'><big><b>></b></big></span>"],
+["\t<\t","<span style='color:red;'><big><b><</b></big></span>"],
+["\t:\t","<span style='color:dark;'><big><b>:</b></big></span>"],
+["\t \t"," "],
+["\t\\n\t","<br>"]
 </textarea>
+</div>
 <textarea id='plain'>
 
 </textarea>
@@ -67,44 +93,71 @@ asfd>
 <script>
   var memo = document.querySelector('textarea#memo')
   var memo_rules = document.querySelector('textarea#rules')
+  var memo_expressions = document.querySelector('textarea#expressions')
+  
   var plain = document.querySelector('textarea#plain')
   var result = document.querySelector('#result')
   var btn_update_rules = document.querySelector('button#update')
   var cnv = document.querySelector('canvas')
   
-  var rules = {}
+  var expressions = []
+  var rules = []
   var text = ''
  
   function update_result(){
-	result.innerHTML = plain.value
-	draw_element_in_canvas(result, cnv)
+    result.innerHTML = plain.value
+    draw_element_in_canvas(result, cnv)
 	  //.then(alert)
   }
   
   function update_plain(){
-	var styled_text = rules.reduce(replace_pair, text)
-	//var styled_text = multi_replace(text, rules)
-	plain.value = styled_text
+    var styled_text = rules.reduce(replace_pair, text)
+    //var styled_text = multi_replace(text, rules)
+    plain.value = styled_text
   }
   
   function update_text(){
-	text = memo.value
+    text = memo.value
+    localStorage.memo = memo.value
   }
   function update_rules(){
-  	var str_rules = memo_rules.value
-	console.log(str_rules)
-	rules = JSON.parse(str_rules)
-	
-	console.log(rules)
+  	var str_rules = '['+memo_rules.value+']'
+    console.log(str_rules)
+    var str_rules_expressed = expressions.reduce(plain_replace_pair, str_rules)
+    rules = JSON.parse(str_rules_expressed)
+    
+    console.log(rules)
+    localStorage.memo_rules = memo_rules.value
+  }
+  function update_expressions(){
+    var str_expressions = ('['+memo_expressions.value+']').split('\\').join('\\\\')
+    console.log(str_expressions)
+    expressions = JSON.parse(str_expressions)
+    
+    console.log(expressions)
+    localStorage.memo_expressions = memo_expressions.value
+  }
+  
+  
+  if (localStorage.memo) {
+    memo.value = localStorage.memo
+  }
+  if (localStorage.memo_rules) {
+    memo_rules.value = localStorage.memo_rules
+  }
+  if (localStorage.memo_expressions) {
+    memo_expressions.value = localStorage.memo_expressions
   }
   
   update_text()
+  update_expressions()
   update_rules()
   update_plain()
   update_result()
   
   memo.onchange = function(){update_text();update_plain();update_result();}
   memo_rules.onchange = function(){update_rules();update_plain();update_result();}
+  memo_expressions.onchange = function(){update_expressions();update_rules();update_plain();update_result();}
   plain.onchange = function(){update_result();}
   
 </script>
