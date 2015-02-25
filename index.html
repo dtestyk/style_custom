@@ -43,14 +43,16 @@ canvas {
 #expressions {
 	width: 310px;
 	height: 100px;
-	background: silver;
+	background: LightGray;
   display: block;
+  border: 1px dotted;
 }
 #rules {
 	width: 310px;
 	height: 300px;
 	background: LightGray;
   display: block;
+  border: 1px dotted;
 }
 #plain {
 	width: 200px;
@@ -112,7 +114,6 @@ asfd>
   
   function update_plain(){
     var styled_text = rules.reduce(replace_pair, text)
-    //var styled_text = multi_replace(text, rules)
     plain.value = styled_text
   }
   
@@ -130,7 +131,7 @@ asfd>
     localStorage.memo_rules = memo_rules.value
   }
   function update_expressions(){
-    var str_expressions = ('['+memo_expressions.value+']').split('\\').join('\\\\')
+    var str_expressions = ('['+memo_expressions.value+']')
     console.log(str_expressions)
     expressions = JSON.parse(str_expressions)
     
