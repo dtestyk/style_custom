@@ -41,14 +41,14 @@ canvas {
   float: left;
 }
 #expressions {
-	width: 310px;
+	width: 320px;
 	height: 100px;
 	background: LightGray;
   display: block;
   border: 1px dotted;
 }
 #rules {
-	width: 310px;
+	width: 320px;
 	height: 300px;
 	background: LightGray;
   display: block;
@@ -75,12 +75,19 @@ asfd>
 <
 </textarea>
 <div id='div_rules'>
-<textarea id='expressions'></textarea>
+<textarea id='expressions'>
+["<blue>","<span style='color:blue;'>"],
+["</blue>","</span>"],
+["<red>","<span style='color:red;'>"],
+["</red>","</span>"],
+["<dark>","<span style='color:red;'>"],
+["</dark>","</span>"]
+</textarea>
 <textarea id='rules'>
 ["( |\\n|\\S+>|<|:)","\t$1\t"],
-["\t(\\S+)>\t", "<span style='color:blue;'>$1</span><span style='color:red;'><big><b>></b></big></span>"],
-["\t<\t","<span style='color:red;'><big><b><</b></big></span>"],
-["\t:\t","<span style='color:dark;'><big><b>:</b></big></span>"],
+["\t(\\S+)>\t", "<blue>$1</blue><red><big><b>></b></big></red>"],
+["\t<\t","<red><big><b><</b></big></red>"],
+["\t:\t","<dark><big><b>:</b></big></dark>"],
 ["\t \t"," "],
 ["\t\\n\t","<br>"]
 </textarea>
