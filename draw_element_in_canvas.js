@@ -5,7 +5,7 @@ function draw_element_in_canvas(element, canvas){
 		console.log(w,h)
 		var html = element.outerHTML
 			.split('<br>').join('<br />')
-			.split('&nbsp;').join(' ')
+			.split('&nbsp;').join("/u00ff")
 		canvas.width = w
 		canvas.height = h
 		var fs = getComputedStyle(element).fontSize
